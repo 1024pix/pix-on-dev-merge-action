@@ -1,0 +1,5 @@
+/node_modules/*
+/.idea/modules.xml
+/.idea/pix-on-dev-merge-action.iml
+/.idea/vcs.xml
+/.idea/workspace.xml

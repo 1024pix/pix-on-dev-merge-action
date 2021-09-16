@@ -1,0 +1,15 @@
+name: 'Notify team on config file change'
+description: 'Github action to send Slack notifications to teams that have modified the Pix API config file'
+inputs:
+  GITHUB_TOKEN:
+    description: 'The GitHub token'
+    required: true
+  SLACK_BOT_TOKEN:
+    description: 'The OAuth token of a Slack Bot'
+    required: true
+  INTEGRATION_ENV_URL:
+    description: 'The URL of the integration environment dashboard'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
