@@ -39,7 +39,7 @@ jobs:
       - name: Call notify team on config file change action
         uses: 1024pix/notify-team-on-config-file-change@v1.0.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           INTEGRATION_ENV_URL: ${{ secrets.INTEGRATION_ENV_URL }}
 ```
