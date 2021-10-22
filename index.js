@@ -19,6 +19,15 @@ async function run() {
       ref: github.context.sha
     });
 
+    const teams = [
+      { githubLabel: 'team-prescription', slackLabel: 'team-prescription' },
+      { githubLabel: 'team-certif', slackLabel: 'team-certification' },
+      { githubLabel: 'team-captains', slackLabel: 'team-captains' },
+      { githubLabel: 'team-acces', slackLabel: 'team-accès' },
+      { githubLabel: 'team-evaluation', slackLabel: 'team-évaluation' },
+      { githubLabel: 'team-contenu', slackLabel: 'team-contenus-dev' },
+    ];
+
     const hasConfigFileBeenModified = !!commit.data.files.find((file) => file.filename === CONFIG_FILE_PATH);
 
     if (hasConfigFileBeenModified) {
@@ -37,13 +46,19 @@ async function run() {
 
       const slackClient = new WebClient(slackBotToken);
       for (const teamLabel of teamLabels) {
-        const result = await slackClient.chat.postMessage({
-          text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
-          channel: teamLabel,
-        });
+        const team = teams.find((team) => team.githubLabel === teamLabel);
+        if (team) {
+          const channel = team.slackLabel;
+          const result = await slackClient.chat.postMessage({
+            text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
+            channel,
+          });
 
-        if (result.ok) {
-          core.info(`Message sent to channel ${teamLabel}`);
+          if (result.ok) {
+            core.info(`Message sent to channel ${teamLabel}`);
+          }
+        } else {
+          core.error(`No team found with github label ${teamLabel}`);
         }
       }
     }
