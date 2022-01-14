@@ -20,12 +20,12 @@ async function run() {
     });
 
     const teams = [
-      { githubLabel: 'team-prescription', slackLabel: 'team-prescription' },
-      { githubLabel: 'team-certif', slackLabel: 'team-certification' },
+      { githubLabel: 'team-prescription', slackLabel: 'team-dev-prescription' },
+      { githubLabel: 'team-certif', slackLabel: 'team-dev-certification' },
       { githubLabel: 'team-captains', slackLabel: 'team-captains' },
-      { githubLabel: 'team-acces', slackLabel: 'team-accès' },
-      { githubLabel: 'team-evaluation', slackLabel: 'team-évaluation' },
-      { githubLabel: 'team-contenu', slackLabel: 'team-contenus-dev' },
+      { githubLabel: 'team-acces', slackLabel: 'team-dev-accès' },
+      { githubLabel: 'team-evaluation', slackLabel: 'team-dev-évaluation' },
+      { githubLabel: 'team-contenu', slackLabel: 'team-dev-contenus' },
     ];
 
     const hasConfigFileBeenModified = !!commit.data.files.find((file) => file.filename === CONFIG_FILE_PATH);
