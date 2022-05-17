@@ -13,11 +13,35 @@ const teams = [
   { githubLabel: 'team-contenu', slackChannel: 'team-dev-contenus' },
 ];
 
+async function postSlackMessage(teamLabels, pullRequest) {
+  const slackBotToken = core.getInput('SLACK_BOT_TOKEN');
+  const integrationEnvUrl = core.getInput('INTEGRATION_ENV_URL');
+
+  const slackClient = new WebClient(slackBotToken);
+  const slackChannels = teamLabels
+        .map((teamLabel) => {
+          return teams.find((team) => team.githubLabel === teamLabel);
+        })
+        .filter(v => v)
+        .map((team) => team.slackChannel);
+
+  if (slackChannels.length > 0) {
+    for (const channel of slackChannels) {
+      const result = await slackClient.chat.postMessage({
+        text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
+        channel,
+      });
+
+      if (result.ok) {
+        core.info(`Message sent to channel ${channel}`);
+      }
+    }
+  }
+}
+
 async function run() {
   try {
     const githubToken = core.getInput('GITHUB_TOKEN');
-    const slackBotToken = core.getInput('SLACK_BOT_TOKEN');
-    const integrationEnvUrl = core.getInput('INTEGRATION_ENV_URL');
 
     const octokit = github.getOctokit(githubToken);
     const { owner, repo } = github.context.repo;
@@ -37,30 +61,14 @@ async function run() {
         commit_sha: github.context.sha,
       });
 
-      let pullRequest = pullRequests.data[0];
+      const pullRequest = pullRequests.data[0];
       const teamLabels = pullRequest.labels
         .filter((label) => label.name.startsWith('team-'))
         .map((label) => label.name);
 
       core.info(`Labels ${teamLabels} found.`);
 
-      const slackClient = new WebClient(slackBotToken);
-      for (const teamLabel of teamLabels) {
-        const team = teams.find((team) => team.githubLabel === teamLabel);
-        if (team) {
-          const channel = team.slackChannel;
-          const result = await slackClient.chat.postMessage({
-            text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
-            channel,
-          });
-
-          if (result.ok) {
-            core.info(`Message sent to channel ${teamLabel}`);
-          }
-        } else {
-          core.error(`No team found with github label ${teamLabel}`);
-        }
-      }
+      await postSlackMessage(teamsLabels, pullRequest);
     }
   } catch (error) {
     core.setFailed(error.message);
