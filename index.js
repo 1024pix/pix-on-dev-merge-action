@@ -4,6 +4,15 @@ const { WebClient } = require('@slack/web-api');
 
 const CONFIG_FILE_PATH = 'api/lib/config.js';
 
+const teams = [
+  { githubLabel: 'team-prescription', slackChannel: 'team-dev-prescription' },
+  { githubLabel: 'team-certif', slackChannel: 'team-dev-certification' },
+  { githubLabel: 'team-captains', slackChannel: 'team-captains' },
+  { githubLabel: 'team-acces', slackChannel: 'team-dev-accès' },
+  { githubLabel: 'team-evaluation', slackChannel: 'team-dev-évaluation' },
+  { githubLabel: 'team-contenu', slackChannel: 'team-dev-contenus' },
+];
+
 async function run() {
   try {
     const githubToken = core.getInput('GITHUB_TOKEN');
@@ -18,15 +27,6 @@ async function run() {
       repo,
       ref: github.context.sha
     });
-
-    const teams = [
-      { githubLabel: 'team-prescription', slackLabel: 'team-dev-prescription' },
-      { githubLabel: 'team-certif', slackLabel: 'team-dev-certification' },
-      { githubLabel: 'team-captains', slackLabel: 'team-captains' },
-      { githubLabel: 'team-acces', slackLabel: 'team-dev-accès' },
-      { githubLabel: 'team-evaluation', slackLabel: 'team-dev-évaluation' },
-      { githubLabel: 'team-contenu', slackLabel: 'team-dev-contenus' },
-    ];
 
     const hasConfigFileBeenModified = !!commit.data.files.find((file) => file.filename === CONFIG_FILE_PATH);
 
@@ -48,7 +48,7 @@ async function run() {
       for (const teamLabel of teamLabels) {
         const team = teams.find((team) => team.githubLabel === teamLabel);
         if (team) {
-          const channel = team.slackLabel;
+          const channel = team.slackChannel;
           const result = await slackClient.chat.postMessage({
             text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
             channel,
