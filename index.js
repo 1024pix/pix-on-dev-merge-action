@@ -42,26 +42,36 @@ async function run() {
         .filter((label) => label.name.startsWith('team-'))
         .map((label) => label.name);
 
-      core.info(`Labels ${teamLabels} found.`);
+      core.info(`GitHub labels ${teamLabels} found in PR.`);
 
       const slackClient = new WebClient(slackBotToken);
       for (const teamLabel of teamLabels) {
         const team = teams.find((team) => team.githubLabel === teamLabel);
         if (team) {
           const channel = team.slackLabel;
-          const result = await slackClient.chat.postMessage({
+          core.info(`Slack team channel ${channel} found.`);
+          
+          const slackPostMessageParams = {
             text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
             channel,
-          });
+          }
+          core.debug(`Using slackClient.chat.postMessage`, slackPostMessageParams);
+
+          const result = await slackClient.chat.postMessage(slackPostMessageParams);
 
           if (result.ok) {
             core.info(`Message sent to channel ${teamLabel}`);
+          } else {
+            core.error(`An error occured while trying to post a Slack message.`);
+            core.debug(result);
           }
         } else {
-          core.error(`No team found with github label ${teamLabel}`);
+          core.error(`No team found with GitHub label ${teamLabel}`);
         }
       }
     }
+
+    core.info(`No config file modification detected.`);
   } catch (error) {
     core.setFailed(error.message);
   }
