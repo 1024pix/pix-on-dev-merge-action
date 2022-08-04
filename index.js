@@ -8,7 +8,7 @@ async function run() {
   try {
     const githubToken = core.getInput('GITHUB_TOKEN');
     const slackBotToken = core.getInput('SLACK_BOT_TOKEN');
-    const integrationEnvUrl = core.getInput('INTEGRATION_ENV_URL');
+
 
     const octokit = github.getOctokit(githubToken);
     const { owner, repo } = github.context.repo;
@@ -50,7 +50,7 @@ async function run() {
         if (team) {
           const channel = team.slackLabel;
           const result = await slackClient.chat.postMessage({
-            text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
+            text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement `,
             channel,
           });
 
