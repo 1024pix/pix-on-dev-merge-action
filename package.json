@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha 'tests/**/*.test.js' --recursive --timeout 60000 --exit --reporter=${MOCHA_REPORTER:-dot}"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,11 @@
     "@slack/web-api": "^6.4.0",
     "install": "^0.13.0",
     "npm": "^7.24.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.0",
+    "sinon": "^15.0.4"
   }
 }
