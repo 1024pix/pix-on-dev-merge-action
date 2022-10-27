@@ -16,7 +16,7 @@ async function run() {
     const commit = await octokit.rest.repos.getCommit({
       owner,
       repo,
-      ref: github.context.sha
+      ref: github.context.sha,
     });
 
     const teams = [
@@ -28,14 +28,17 @@ async function run() {
       { githubLabel: 'team-contenu', slackLabel: 'team-dev-contenus' },
     ];
 
-    const hasConfigFileBeenModified = !!commit.data.files.find((file) => file.filename === CONFIG_FILE_PATH);
+    const hasConfigFileBeenModified = !!commit.data.files.find(
+      (file) => file.filename === CONFIG_FILE_PATH
+    );
 
     if (hasConfigFileBeenModified) {
-      const pullRequests = await octokit.rest.repos.listPullRequestsAssociatedWithCommit({
-        owner,
-        repo,
-        commit_sha: github.context.sha,
-      });
+      const pullRequests =
+        await octokit.rest.repos.listPullRequestsAssociatedWithCommit({
+          owner,
+          repo,
+          commit_sha: github.context.sha,
+        });
 
       let pullRequest = pullRequests.data[0];
       const teamLabels = pullRequest.labels
@@ -50,19 +53,26 @@ async function run() {
         if (team) {
           const channel = team.slackLabel;
           core.info(`Slack team channel ${channel} found.`);
-          
-          const slackPostMessageParams = {
-            text: `Le fichier de configuration a été modifié dans la PR *${pullRequest.title}*\n Vérifiez les variables d'environnement d' <${integrationEnvUrl}|intégration>`,
-            channel,
-          }
-          core.debug(`Using slackClient.chat.postMessage`, slackPostMessageParams);
 
-          const result = await slackClient.chat.postMessage(slackPostMessageParams);
+          const slackPostMessageParams = {
+            text: `Le fichier de configuration a été modifié dans la PR *<${pullRequest.html_url}|${pullRequest.title}>*\n Vérifiez les variables d'environnement d'<${integrationEnvUrl}|intégration>`,
+            channel,
+          };
+          core.debug(
+            `Using slackClient.chat.postMessage`,
+            slackPostMessageParams
+          );
+
+          const result = await slackClient.chat.postMessage(
+            slackPostMessageParams
+          );
 
           if (result.ok) {
             core.info(`Message sent to channel ${teamLabel}`);
           } else {
-            core.error(`An error occured while trying to post a Slack message.`);
+            core.error(
+              `An error occured while trying to post a Slack message.`
+            );
             core.debug(result);
           }
         } else {
