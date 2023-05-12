@@ -1,6 +1,6 @@
 {
   "name": "notify-team-on-config-file-change",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "preinstall": "npx check-engine"
   },
   "engines": {
-    "node": "18.16.x"
+    "node": "16.20.0"
   },
   "repository": {
     "type": "git",
