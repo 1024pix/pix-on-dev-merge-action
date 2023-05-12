@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha 'tests/**/*.test.js' --recursive --timeout 60000 --exit --reporter=${MOCHA_REPORTER:-dot}"
+    "test": "mocha 'tests/**/*.test.js' --recursive --timeout 60000 --exit --reporter=${MOCHA_REPORTER:-dot}",
+    "preinstall": "npx check-engine"
+  },
+  "engines": {
+    "node": "18.16.x"
   },
   "repository": {
     "type": "git",
