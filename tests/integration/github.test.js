@@ -9,7 +9,7 @@ const REPO_NAME = 'monRepo'
 const GIT_SHA = 'master'
 const configFilename = 'api/lib/config.js'
 
-describe('Integration | notify-ream-on-config-file-change', function () {
+describe('Integration | notify-team-on-config-file-change', function () {
   let github
   let octokit
 
