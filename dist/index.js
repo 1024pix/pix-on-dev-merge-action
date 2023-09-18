@@ -6,9 +6,11 @@
 
 
 async function foundChannel(slackClient, channelName, core) {
-  const channels = await slackClient.conversations.list({
+  const conversationsList = await slackClient.conversations.list({
     types: 'public_channel,private_channel'
-  }).channels
+  })
+
+  const channels = conversationsList.channels
 
   let result = channels.filter(chan => chan.name === channelName)
   let channelId = undefined
