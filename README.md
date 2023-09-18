@@ -15,7 +15,10 @@ A chaque modification du fichier `index.js`, il faut recompiler l'action à l'ai
 
 Le résultat dans le dossier `dist` doit être commité avec les modifications.
 
-Créer un tag en réécrivant tous les tags nécessaires :
+Pour permettre l'utilisation de la dernière version mineure avec la syntaxe suivante :
+` uses: 1024pix/notify-team-on-config-file-change@v1`
+
+ Créer un tag en réécrivant tous les tags parents :
 ```bash
 gcmsg "release v1.x.0"
 gst
