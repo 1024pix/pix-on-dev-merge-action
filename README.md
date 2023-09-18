@@ -15,9 +15,18 @@ A chaque modification du fichier `index.js`, il faut recompiler l'action à l'ai
 
 Le résultat dans le dossier `dist` doit être commité avec les modifications.
 
-Créer un tag :
+Pour permettre l'utilisation de la dernière version mineure avec la syntaxe suivante :
+` uses: 1024pix/notify-team-on-config-file-change@v1`
+
+ Créer un tag en réécrivant tous les tags parents :
 ```bash
-  git tag -a -m 'v.1.0.0' v1.0.0
+gcmsg "release v1.x.0"
+gst
+git tag -a -m 'v1.x.0' v1.x.0
+git tag -a -m 'v1.x' v1.x
+git tag --delete v1
+git push origin :refs/tags/v1
+git tag -a -m 'v1' v1
 ```
 
 Pusher le code, avec le nouveau tag :
