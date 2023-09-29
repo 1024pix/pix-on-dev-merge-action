@@ -87,7 +87,7 @@ describe('Integration | notify-team-on-config-file-change', function () {
               }
           }))
 
-        await run({ github, SlackWebClient: undefined, configFilename: 'api/lib/config.js', core })
+        await run({ github, SlackWebClient: undefined, configFilename: 'api/src/shared/config.js', core })
 
         expect(core.info.calledWith('No config file modification detected.')).to.be.true
       })
